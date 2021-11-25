@@ -104,6 +104,7 @@ contract Friends is Ownable, Pausable {
         requests[_to].push(_from);
         uint index = requests[_to].length;
         requestsTracker[_to][_from.sender] = index;
+        requestsTracker[_from.sender][_to] = index;
     }
     
     /**
@@ -126,6 +127,7 @@ contract Friends is Ownable, Pausable {
         
         // Clear the previous index by setting the maximum integer
         requestsTracker[_from][_toRemove] = MAX_UINT;
+        requestsTracker[_toRemove][_from] = MAX_UINT;
         
         // Reduce the size of the array by 1
         requests[_from].pop();
@@ -136,7 +138,15 @@ contract Friends is Ownable, Pausable {
      */
     function makeRequest(address _to, string memory _pubKey) public whenNotPaused {
         uint index = requestsTracker[_to][msg.sender];
+        // uint friendIndex = friendsTracker[_to][msg.sender];
+        // require(friendIndex != MAX_UINT, "Friendship removed");
+        require(msg.sender != _to, "You cannot send a friend request to yourself");
+        // You have already sent a friend request to this address
         require(index == 0 || index == MAX_UINT, "Friend request already sent");
+        // You have already received a friend request from this address
+        require(requestsTracker[msg.sender][_to] == 0 || requestsTracker[msg.sender][_to] == MAX_UINT, "Friend request already sent");
+        // Must not be friend
+        require(friendsTracker[msg.sender][_to] == 0 || friendsTracker[msg.sender][_to] == MAX_UINT, "You are already friends");
 
         _addRequest(
             _to,
