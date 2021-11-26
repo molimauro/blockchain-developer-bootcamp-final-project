@@ -45,7 +45,7 @@ function Friend({ address }: { address: string }) {
         m="5px"
         color="brand.800"
         isLoading={status === "loading"}
-        aria-label="accept"
+        aria-label="remove-friend"
         onClick={onRemove}
         icon={<FontAwesomeIcon icon={faTrash} />}
       />

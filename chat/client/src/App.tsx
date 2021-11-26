@@ -28,10 +28,10 @@ function App() {
   return (
     <AppContextProvider>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Box className="App" bg="brand.600" h="100vh">
+        <Box className="App" bg="brand.700" h="100vh">
           <CommonError />
-          <Box w="1400px" m="0 auto" bg="brand.600" h="100%">
-            <Flex as="nav" h="150px" bg="brand.600">
+          <Box w="1400px" m="0 auto" bg="brand.700" h="100%">
+            <Flex as="nav" h="150px" bg="brand.700">
               <TopBar />
             </Flex>
             <Grid
