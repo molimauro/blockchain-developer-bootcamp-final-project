@@ -5,6 +5,10 @@ const initialContext = {
   setEthBalance: (balance: string) => {},
   refetchFriends: false,
   setRefetchFriends: (bool: boolean) => {},
+  selectedFriend: "",
+  setSelectedFriend: (str: string) => {},
+  friends: [] as [string, string][],
+  setFriends: (friends: [string, string][]) => {},
   requestsNumber: 0,
   setRequestNumber: (num: number) => {},
   contentError: undefined,
@@ -26,6 +30,18 @@ const appReducer = (
       return {
         ...state,
         refetchFriends: payload,
+      };
+
+    case "SET_SELECTED_FRIEND":
+      return {
+        ...state,
+        selectedFriend: payload,
+      };
+
+    case "SET_FRIENDS":
+      return {
+        ...state,
+        friends: payload,
       };
 
     case "SET_REQUEST_NUMBER":
@@ -62,6 +78,14 @@ export const AppContextProvider = ({
     refetchFriends: store.refetchFriends,
     setRefetchFriends: (bool: boolean) => {
       dispatch({ type: "SET_REFETCH_FRIENDS", payload: bool });
+    },
+    selectedFriend: store.selectedFriend,
+    setSelectedFriend: (str: string) => {
+      dispatch({ type: "SET_SELECTED_FRIEND", payload: str });
+    },
+    friends: store.friends,
+    setFriends: (friends: [string, string][]) => {
+      dispatch({ type: "SET_FRIENDS", payload: friends });
     },
     requestsNumber: store.requestsNumber,
     setRequestNumber: (num: number) => {

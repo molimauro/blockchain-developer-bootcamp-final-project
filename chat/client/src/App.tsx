@@ -28,10 +28,29 @@ function App() {
   return (
     <AppContextProvider>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Box className="App" bg="brand.700" h="100vh">
+        <Box
+          className="App"
+          bg="brand.700"
+          backgroundImage="url('background.png')"
+          backgroundPosition="center"
+          h="100vh"
+        >
           <CommonError />
-          <Box w="1400px" m="0 auto" bg="brand.700" h="100%">
-            <Flex as="nav" h="150px" bg="brand.700">
+          <Box
+            w="1400px"
+            m="0 auto"
+            bg="brand.700"
+            h="100%"
+            backgroundImage="url('background.png')"
+            backgroundPosition="center"
+          >
+            <Flex
+              as="nav"
+              h="150px"
+              bg="brand.700"
+              backgroundImage="url('background.png')"
+              backgroundPosition="center"
+            >
               <TopBar />
             </Flex>
             <Grid
@@ -45,6 +64,8 @@ function App() {
                 colSpan={3}
                 bg="brand.50"
                 borderRadius="10px"
+                border="3px solid"
+                borderColor="brand.800"
               >
                 <CommonChat />
               </GridItem>
@@ -55,6 +76,8 @@ function App() {
                 minHeight="0"
                 overflow="auto"
                 p="10px"
+                border="3px solid"
+                borderColor="brand.800"
               >
                 <Text textAlign="center" fontWeight="bold">
                   Friends
@@ -67,6 +90,8 @@ function App() {
                 borderRadius="10px"
                 minHeight="0"
                 overflow="auto"
+                border="3px solid"
+                borderColor="brand.800"
               >
                 <AddFriend />
               </GridItem>

@@ -7,6 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useAppContext } from "AppContext";
 import FriendsABI from "contracts/Friends.json";
 import { useContract } from "hooks/useContract";
+import useIdentity from "hooks/useIdentity";
 import React, { useCallback, useEffect, useState } from "react";
 import { FRIENDS_ADDRESS } from "utils/constants";
 
@@ -23,13 +24,18 @@ function Request({
   const contract = useContract(FRIENDS_ADDRESS, FriendsABI.abi);
   const { setContentError, setRefetchFriends } = useAppContext();
   const { account, chainId } = useWeb3React();
+  const { identity } = useIdentity();
 
   const onAccept = async () => {
     try {
       setStatus("loading");
-      const transaction = await contract.acceptRequest(address, "pubkey", {
-        from: account,
-      });
+      const transaction = await contract.acceptRequest(
+        address,
+        identity.public.toString(),
+        {
+          from: account,
+        }
+      );
       const confirmations = chainId === 1337 ? 1 : 2;
       await transaction.wait(confirmations);
       setStatus("idle");

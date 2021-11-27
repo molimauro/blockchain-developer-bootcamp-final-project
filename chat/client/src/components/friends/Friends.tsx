@@ -16,6 +16,8 @@ function Friend({ address }: { address: string }) {
   const contract = useContract(FRIENDS_ADDRESS, FriendsABI.abi);
   const { setContentError, setRefetchFriends } = useAppContext();
   const { account, chainId } = useWeb3React();
+  const { selectedFriend, setSelectedFriend } = useAppContext();
+  const [hover, setHover] = useState(false);
 
   const onRemove = async () => {
     try {
@@ -38,12 +40,28 @@ function Friend({ address }: { address: string }) {
   };
 
   return (
-    <Flex alignItems="center">
+    <Flex
+      userSelect="none"
+      alignItems="center"
+      width="100%"
+      justifyContent="space-between"
+      cursor="pointer"
+      onClick={() =>
+        selectedFriend === address
+          ? setSelectedFriend("")
+          : setSelectedFriend(address)
+      }
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      bg={selectedFriend === address ? "brand.500" : hover ? "brand.400" : ""}
+      p="5px"
+      borderRadius="5px"
+    >
       <Avatar bg="teal.500" />
       <Text m="5px">{address}</Text>
       <IconButton
         m="5px"
-        color="brand.800"
+        color="teal.500"
         isLoading={status === "loading"}
         aria-label="remove-friend"
         onClick={onRemove}
@@ -54,21 +72,20 @@ function Friend({ address }: { address: string }) {
 }
 
 export default function Friends() {
-  const [friends, setFriends] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "fetching" | "error">(
     "fetching"
   );
   const { active } = useWeb3React();
   const contract = useContract(FRIENDS_ADDRESS, FriendsABI.abi);
-  const { refetchFriends, setRefetchFriends } = useAppContext();
+  const { refetchFriends, setRefetchFriends, friends, setFriends } =
+    useAppContext();
 
   const prevActive = usePrevious(active);
   const getFriends = useCallback(async (contract) => {
     try {
       const contractFriends = await contract.getFriends();
-      setFriends(
-        contractFriends.map((request: [string, string]) => request[0])
-      );
+      setFriends(contractFriends);
+
       // setListings(arr);
       setStatus("idle");
     } catch (e) {
@@ -91,9 +108,14 @@ export default function Friends() {
   }
 
   return (
-    <Flex alignItems="center" flexDir="column" justifyContent="space-evenly">
-      {friends.map((r, i) => (
-        <Friend key={i} address={r} />
+    <Flex
+      alignItems="center"
+      flexDir="column"
+      justifyContent="space-evenly"
+      m="5px"
+    >
+      {friends.map((f, i) => (
+        <Friend key={i} address={f[0]} />
       ))}
     </Flex>
   );

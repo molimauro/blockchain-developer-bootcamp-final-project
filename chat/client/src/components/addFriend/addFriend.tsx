@@ -14,6 +14,7 @@ import { useAppContext } from "AppContext";
 import Requests from "components/requests/Requests";
 import FriendsABI from "contracts/Friends.json";
 import { useContract } from "hooks/useContract";
+import useIdentity from "hooks/useIdentity";
 import React from "react";
 import { FRIENDS_ADDRESS } from "utils/constants";
 
@@ -24,23 +25,29 @@ export default function AddFriend() {
   );
   const { setContentError, requestsNumber } = useAppContext();
   const { account, chainId } = useWeb3React();
+  const { identity } = useIdentity();
   const contract = useContract(FRIENDS_ADDRESS, FriendsABI.abi);
 
+  console.log("MY IDENITY", identity?.public.toString());
   const onAddFriend = async () => {
     if (!isAddress(address)) {
       return setContentError("Please insert a valid address");
     }
     try {
       setStatus("loading");
-
-      const transaction = await contract.makeRequest(address, "pubkey", {
-        from: account,
-      });
+      const transaction = await contract.makeRequest(
+        address,
+        identity.public.toString(),
+        {
+          from: account,
+        }
+      );
       const confirmations = chainId === 1337 ? 1 : 2;
       await transaction.wait(confirmations);
       setStatus("success");
       console.log(transaction);
     } catch (e: any) {
+      console.log(e);
       let error = e.message;
       if (e.data?.message) {
         error = e.data.message.split("revert")[1];
@@ -70,6 +77,11 @@ export default function AddFriend() {
               disabled={status === "loading"}
               onChange={(event) => setAddress(event.target.value)}
               placeholder="Paste here an address"
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  onAddFriend();
+                }
+              }}
             />
             <Button isLoading={status === "loading"} onClick={onAddFriend}>
               Add
