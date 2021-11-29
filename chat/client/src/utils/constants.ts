@@ -1,4 +1,3 @@
-export const FRIENDS_ADDRESS = "0x487e7DDCF277a4c109722EDce04253580de5aAbe";
 export const COLORS = [
   "#fc5c65",
   "#fd9644",

@@ -1,0 +1,5 @@
+build
+client/src/contract-build
+.env
+node_modules
+.DS_Store
