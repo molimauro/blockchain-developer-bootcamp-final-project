@@ -3,8 +3,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Web3ReactProvider } from "@web3-react/core";
 import AddFriend from "components/addFriend/addFriend";
 import CommonChat from "components/commonChat/commonChat";
-import CommonError from "components/commonError/CommonError";
 import Friends from "components/friends/Friends";
+import { CommonError, CommonSucc } from "components/toasts/Toasts";
 import TopBar from "components/topBar/TopBar";
 import React from "react";
 import { AppContextProvider } from "./AppContext";
@@ -36,6 +36,7 @@ function App() {
                     h="100vh"
                 >
                     <CommonError />
+                    <CommonSucc />
                     <Box
                         w="1400px"
                         m="0 auto"

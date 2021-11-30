@@ -24,9 +24,19 @@ function Request({
 }) {
     const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
     const contract = useContract(friendsAddress, FriendsABI.abi);
-    const { setContentError, setRefetchFriends } = useAppContext();
-    const { account, chainId } = useWeb3React();
+    const {
+        setContentError,
+        setRefetchFriends,
+        setContentSucc,
+        setRequestNumber,
+    } = useAppContext();
+    const { account } = useWeb3React();
     const { identity } = useIdentity();
+
+    if (!identity?.public) {
+        return null;
+    }
+    console.log(identity);
 
     const onAccept = async () => {
         try {
@@ -42,7 +52,9 @@ function Request({
             await transaction.wait(confirmations);
             setStatus("idle");
             setRequests(requests.filter(r => r !== address));
+            setRequestNumber(requests.filter(r => r !== address).length);
             setRefetchFriends(true);
+            setContentSucc("Request accepted!");
         } catch (e: any) {
             let error = e.message;
             if (e.data?.message) {
@@ -64,6 +76,7 @@ function Request({
             setStatus("idle");
             setRequests(requests.filter(r => r !== address));
             setRefetchFriends(true);
+            setContentSucc("Request declined!");
         } catch (e: any) {
             let error = e.message;
             if (e.data?.message) {

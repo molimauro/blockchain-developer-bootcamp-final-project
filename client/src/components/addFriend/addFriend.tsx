@@ -24,7 +24,7 @@ function AddFriend({ friendsAddress }: { friendsAddress: string }) {
     const [status, setStatus] = React.useState<"idle" | "loading" | "success">(
         "idle",
     );
-    const { setContentError, requestsNumber } = useAppContext();
+    const { setContentError, requestsNumber, setContentSucc } = useAppContext();
     const { account } = useWeb3React();
     const { identity } = useIdentity();
 
@@ -47,6 +47,7 @@ function AddFriend({ friendsAddress }: { friendsAddress: string }) {
             await transaction.wait(confirmations);
             setStatus("success");
             console.log(transaction);
+            setContentSucc("Request successfully sent!");
         } catch (e: any) {
             console.log(e.message);
             let error = e.message;

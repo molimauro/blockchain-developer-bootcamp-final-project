@@ -23,7 +23,8 @@ function Friend({
     const contract = useContract(friendsAddress, FriendsABI.abi);
     const { setContentError, setRefetchFriends } = useAppContext();
     const { account, chainId } = useWeb3React();
-    const { selectedFriend, setSelectedFriend } = useAppContext();
+    const { selectedFriend, setSelectedFriend, setContentSucc } =
+        useAppContext();
     const [hover, setHover] = useState(false);
 
     const onRemove = async () => {
@@ -36,6 +37,7 @@ function Friend({
             await transaction.wait(confirmations);
             setStatus("idle");
             setRefetchFriends(true);
+            setContentSucc("Friend removed!");
         } catch (e: any) {
             let error = e.message;
             if (e.data?.message) {
@@ -141,6 +143,7 @@ function Friends({ friendsAddress }: { friendsAddress: string }) {
 
 const FriendsWrapper = () => {
     const { friendsAddress } = useContractAddress();
+    console.log(friendsAddress);
     if (!friendsAddress) return null;
     return <Friends friendsAddress={friendsAddress} />;
 };

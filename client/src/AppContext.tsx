@@ -13,6 +13,8 @@ const initialContext = {
     setRequestNumber: (num: number) => {},
     contentError: undefined,
     setContentError: (str: string) => {},
+    contentSucc: undefined,
+    setContentSucc: (str: string) => {},
 };
 
 const appReducer = (
@@ -56,6 +58,12 @@ const appReducer = (
                 contentError: payload,
             };
 
+        case "SET_CONTENT_SUCC":
+            return {
+                ...state,
+                contentSucc: payload,
+            };
+
         default:
             return state;
     }
@@ -94,6 +102,10 @@ export const AppContextProvider = ({
         contentError: store.contentError,
         setContentError: (str: string) => {
             dispatch({ type: "SET_CONTENT_ERROR", payload: str });
+        },
+        contentSucc: store.contentSucc,
+        setContentSucc: (str: string) => {
+            dispatch({ type: "SET_CONTENT_SUCC", payload: str });
         },
     };
 
