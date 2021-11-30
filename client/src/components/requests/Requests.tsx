@@ -36,7 +36,6 @@ function Request({
     if (!identity?.public) {
         return null;
     }
-    console.log(identity);
 
     const onAccept = async () => {
         try {
