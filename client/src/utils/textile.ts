@@ -20,8 +20,9 @@ export const keyInfo: KeyInfo = {
 };
 
 // Secret key of the common chat, not the best but just for demonstration purposes
-const SECRET_KEY =
-    "bbaareqdtipik2qsxjntesuyrs4chatlcbyhwywnuggvt3blm4r2ljszzfia7sybuyh6plabqxhiadz5zkvseqxs4x7qcfyxrgqmfw3pcdrbf6";
+const SECRET_KEY = process.env.REACT_APP_TEXTILE_COMMON_CHAT_SECRET
+    ? process.env.REACT_APP_TEXTILE_COMMON_CHAT_SECRET
+    : "";
 
 export const getCommonChatIdentity = (): PrivateKey => {
     const cached = localStorage.getItem("chat-private-identity");

@@ -128,7 +128,6 @@ export default function CommonChat() {
         );
 
         const allSettled = await Promise.allSettled(promises);
-
         const filtered = allSettled.filter(
             r => r.status === "fulfilled",
         ) as PromiseFulfilledResult<DecryptedInbox>[];

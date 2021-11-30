@@ -25,7 +25,7 @@ function AddFriend({ friendsAddress }: { friendsAddress: string }) {
         "idle",
     );
     const { setContentError, requestsNumber } = useAppContext();
-    const { account, chainId } = useWeb3React();
+    const { account } = useWeb3React();
     const { identity } = useIdentity();
 
     const contract = useContract(friendsAddress, FriendsABI.abi);
@@ -43,17 +43,17 @@ function AddFriend({ friendsAddress }: { friendsAddress: string }) {
                     from: account,
                 },
             );
-            const confirmations = chainId === 1337 ? 1 : 2;
+            const confirmations = 1;
             await transaction.wait(confirmations);
             setStatus("success");
             console.log(transaction);
         } catch (e: any) {
-            console.log(e);
+            console.log(e.message);
             let error = e.message;
             if (e.data?.message) {
-                error = e.data.message.split("revert")[1];
+                error = e.data?.message.split("revert")[1];
             }
-            setContentError(error);
+            setContentError("Something went wrong");
             setStatus("idle");
         }
     };
@@ -101,9 +101,10 @@ function AddFriend({ friendsAddress }: { friendsAddress: string }) {
                             }}
                         />
                         <Button
-                            isLoading={status === "loading"}
+                            isLoading={
+                                status === "loading" || identity === null
+                            }
                             onClick={onAddFriend}
-                            // bg="brand.100"
                         >
                             Add
                         </Button>

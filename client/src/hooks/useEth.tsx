@@ -9,9 +9,8 @@ const useEth = () => {
     const fetchEthBalance = async () => {
         if (library && active && account) {
             const balance = await library.getBalance(account);
-
             // better to do safe math operations
-            setEthBalance(parseFloat(formatEther(balance)).toPrecision(4));
+            setEthBalance(parseFloat(formatEther(balance)).toPrecision(5));
         } else {
             setEthBalance("--");
         }

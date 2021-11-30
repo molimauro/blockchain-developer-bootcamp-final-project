@@ -46,6 +46,7 @@ const MetamaskConnect = () => {
                             setContentError(
                                 "Looks like you don't have Metamask, you'll need it to use this app.",
                             );
+                            setStatus("ready");
                             return;
                         }
                         await activate(injectedProvider, e => {

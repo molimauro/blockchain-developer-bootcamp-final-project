@@ -38,7 +38,7 @@ function Request({
                     from: account,
                 },
             );
-            const confirmations = chainId === 1337 ? 1 : 2;
+            const confirmations = 1;
             await transaction.wait(confirmations);
             setStatus("idle");
             setRequests(requests.filter(r => r !== address));
@@ -59,7 +59,7 @@ function Request({
             const transaction = await contract.denyRequest(address, {
                 from: account,
             });
-            const confirmations = chainId === 1337 ? 1 : 2;
+            const confirmations = 1;
             await transaction.wait(confirmations);
             setStatus("idle");
             setRequests(requests.filter(r => r !== address));

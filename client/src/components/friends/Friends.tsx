@@ -32,7 +32,7 @@ function Friend({
             const transaction = await contract.removeFriend(address, {
                 from: account,
             });
-            const confirmations = chainId === 1337 ? 1 : 2;
+            const confirmations = 1;
             await transaction.wait(confirmations);
             setStatus("idle");
             setRefetchFriends(true);
