@@ -9,35 +9,34 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 /// @author Mauro Molinari
 /// @notice This contract can be use to keep track of friend requests and friends of its users
 /// @dev Friend requests and Friends structs contains the pubKey used by Textile to talk with each other in the app
-/// @custom: experimental This is an experimental contract.
 contract Friends is Ownable, Pausable {
     
-    /// Friend request struct containing the sender address with the associated pubKey used by Textile
+    // Friend request struct containing the sender address with the associated pubKey used by Textile
     struct FriendRequest {
         address sender;
         string pubKey;
     }
 
-    /// Friend struct containing the dweller address with the associated pubKey used by Textile
+    // Friend struct containing the dweller address with the associated pubKey used by Textile
     struct Friend {
         address dweller;
         string pubKey;
     }
     
-    /// Constant kept to clear previous requests or friends
+    // Constant kept to clear previous requests or friends
     uint MAX_UINT = 2**256 - 1;
 
 
-    /// All friend requests received by an address
+    // All friend requests received by an address
     mapping(address => FriendRequest[]) private requests;
     
-    /// Tracks the index of each friend request inside the mapping
+    // Tracks the index of each friend request inside the mapping
     mapping(address => mapping(address => uint)) private requestsTracker;
     
-    /// All friends that an address has
+    // All friends that an address has
     mapping(address => Friend[]) private friends;
     
-    /// Tracks the index of each Friend inside the mapping
+    // Tracks the index of each Friend inside the mapping
     mapping(address => mapping(address => uint)) private friendsTracker;
 
     /// @notice Request sent event
@@ -84,23 +83,23 @@ contract Friends is Ownable, Pausable {
     /// @param _toRemove To remove friend address
     function _removeFriend(address _from, address _toRemove) private {
         require(friends[_from].length > 0, "There are no friends to remove");
-        /// Index of the element to remove
+        // Index of the element to remove
         uint index = friendsTracker[_from][_toRemove] - 1;
         uint lastIndex = friends[_from].length - 1;
         
         if(index != lastIndex){
-            /// Last friend inside the array
+            // Last friend inside the array
             Friend memory last = friends[_from][lastIndex];
-            ///Change the last with the element to remove
+            // Change the last with the element to remove
             friends[_from][index] = last;
-            ///Update the Index
+            // Update the Index
             friendsTracker[_from][last.dweller] = index + 1;
         }
         
-        /// Clear the previous index by setting the maximum integer
+        // Clear the previous index by setting the maximum integer
         friendsTracker[_from][_toRemove] = MAX_UINT;
         
-        /// Reduce the size of the array by 1
+        // Reduce the size of the array by 1
         friends[_from].pop();
     }
     
@@ -129,24 +128,24 @@ contract Friends is Ownable, Pausable {
     /// @param _toRemove To remove friend address
     function _removeRequest(address _from, address _toRemove) private {
         require(requests[_from].length > 0, "There are no requests to remove");
-        /// Index of the element to remove
+        // Index of the element to remove
         uint index = requestsTracker[_from][_toRemove] - 1;
         uint lastIndex = requests[_from].length - 1;
         
         if(index != lastIndex){
-            /// Last friend inside the array
+            // Last friend inside the array
             FriendRequest memory last = requests[_from][lastIndex];
-            /// Change the last with the element to remove
+            // Change the last with the element to remove
             requests[_from][index] = last;
-            /// Update the Index
+            // Update the Index
             requestsTracker[_from][last.sender] = index + 1;
         }
         
-        /// Clear the previous index by setting the maximum integer
+        // Clear the previous index by setting the maximum integer
         requestsTracker[_from][_toRemove] = MAX_UINT;
         requestsTracker[_toRemove][_from] = MAX_UINT;
         
-        /// Reduce the size of the array by 1
+        // Reduce the size of the array by 1
         requests[_from].pop();
     }
 
@@ -156,11 +155,11 @@ contract Friends is Ownable, Pausable {
     function makeRequest(address _to, string memory _pubKey) public whenNotPaused {
         uint index = requestsTracker[_to][msg.sender];
         require(msg.sender != _to, "You cannot send a friend request to yourself");
-        /// You have already sent a friend request to this address
+        // You have already sent a friend request to this address
         require(index == 0 || index == MAX_UINT, "Friend request already sent");
-        /// You have already received a friend request from this address
+        // You have already received a friend request from this address
         require(requestsTracker[msg.sender][_to] == 0 || requestsTracker[msg.sender][_to] == MAX_UINT, "Friend request already sent");
-        /// Must not be friend
+        // Must not be friend
         require(friendsTracker[msg.sender][_to] == 0 || friendsTracker[msg.sender][_to] == MAX_UINT, "You are already friends");
 
         _addRequest(
@@ -177,10 +176,10 @@ contract Friends is Ownable, Pausable {
     function acceptRequest(address _from, string memory pubKey) public whenNotPaused {
         uint friendRequestIndex = requestsTracker[msg.sender][_from];
         
-        /// Check if the friend request has already been removed
+        // Check if the friend request has already been removed
         require(friendRequestIndex != MAX_UINT, "Friend request has been removed");
         
-        /// Check if the request exist
+        // Check if the request exist
         FriendRequest memory friendRequest = requests[msg.sender][friendRequestIndex - 1];
         require(friendRequest.sender != address(0), "Request does not exist");
         
@@ -206,10 +205,10 @@ contract Friends is Ownable, Pausable {
     function denyRequest(address _from) public whenNotPaused {
         uint friendRequestIndex = requestsTracker[msg.sender][_from];
         
-        /// Check if the friend request exist
+        // Check if the friend request exist
         require(friendRequestIndex != 0, "Friend request does not exist");
         
-        /// Check if the friend request has already been removed
+        // Check if the friend request has already been removed
         require(friendRequestIndex != MAX_UINT, "Friend request has been removed");
         
         _removeRequest(msg.sender, _from);
