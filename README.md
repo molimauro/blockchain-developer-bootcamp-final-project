@@ -54,6 +54,9 @@ A simplified solution can be to create a webchat (Discord-like) in which users w
 - exchange NFT stickers;
 - send money between friends;
 - audio and video calls.
+
+I'm aware of the fact that paying fees for managing friends is not acceptable for the final users, was implemented in this way only for the course completion purposes. In the future the final users will not pay such fees, instead a smart contract with the necessary funds will be in charge of these operations.
+
 ## Simple workflow
 
 1. Enter service web site
